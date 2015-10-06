@@ -14,9 +14,6 @@ public class GildedRose
 	 */
 	public static void main(String[] args)
 	{
-		
-		System.out.println("OMGHAI!");
-		
 		items = new ArrayList<Item>();
 		items.add(new Item("+5 Dexterity Vest", 10, 20));
 		items.add(new Item("Aged Brie", 2, 0));
@@ -25,104 +22,122 @@ public class GildedRose
 		items.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
 		items.add(new Item("Conjured Mana Cake", 3, 6));
 		
-		for (int currentItem = 0; currentItem < items.size(); currentItem++)
-			System.out.println(items.get(currentItem));
+		newDay();
 		
-		decreaseSellIn();
-		updateQuality();
-		
-		for (int currentItem = 0; currentItem < items.size(); currentItem++)
-			System.out.println(items.get(currentItem));
+		for (Item currentItem : items)
+			System.out.println(currentItem);
 	}
 	
-	public static void updateQuality()
+	private static void newDay()
 	{
-		for (int currentItem = 0; currentItem < items.size(); currentItem++)
+		for (Item currentItem : items)
 		{
+			if (isLegendary(currentItem))
+				continue;
 			
-			if (("Aged Brie".equals(items.get(currentItem).getName()))
-					|| "Backstage passes to a TAFKAL80ETC concert".equals(items
-							.get(currentItem).getName()))
+			decreaseSellIn(currentItem);
+			updateQuality(currentItem);
+		}
+	}
+	
+	public static void updateQuality(Item currentItem)
+	{
+		switch (currentItem.getName())
+		{
+			case "Aged Brie":
+				processAgedBrie(currentItem);
+				break;
+			
+			case "Backstage passes to a TAFKAL80ETC concert":
+				processBackstage(currentItem);
+				break;
+			
+			case "Conjured Mana Cake":
+				processConjuredItem(currentItem);
+				break;
+			
+			default:
+				processDefault(currentItem);
+				break;
+		
+		}
+	}
+	
+	private static void processConjuredItem(Item currentItem)
+	{
+		processDefault(currentItem);
+		processDefault(currentItem);
+	}
+	
+	private static boolean isLegendary(Item currentItem)
+	{
+		return currentItem.getName().equals("Sulfuras, Hand of Ragnaros");
+	}
+	
+	private static void processDefault(Item currentItem)
+	{
+		decreaseQuality(currentItem);
+		if (isPassedOut(currentItem))
+		{
+			decreaseQuality(currentItem);
+		}
+	}
+	
+	private static void processBackstage(Item currentItem)
+	{
+		if (isPassedOut(currentItem))
+		{
+			currentItem.setQuality(0);
+		} else
+		{
+			increaseQuality(currentItem);
+			
+			if (currentItem.getSellIn() <= 10)
 			{
 				increaseQuality(currentItem);
-				
-				if ("Backstage passes to a TAFKAL80ETC concert".equals(items
-						.get(currentItem).getName()))
-				{
-					if (items.get(currentItem).getSellIn() <= 10)
-					{
-						increaseQuality(currentItem);
-					}
-					
-					if (items.get(currentItem).getSellIn() <= 5)
-					{
-						increaseQuality(currentItem);
-					}
-				}
-				
-			} else
-			{
-				decreaseQuality(currentItem);
 			}
 			
-			// SELLIN PASSEE
-			if (items.get(currentItem).getSellIn() < 0)
+			if (currentItem.getSellIn() <= 5)
 			{
-				if ("Aged Brie".equals(items.get(currentItem).getName()))
-				{
-					increaseQuality(currentItem);
-				} else
-				{
-					if ("Backstage passes to a TAFKAL80ETC concert"
-							.equals(items.get(currentItem).getName()))
-					{
-						items.get(currentItem).setQuality(0);
-					} else
-					{
-						decreaseQuality(currentItem);
-						
-					}
-					
-				}
+				increaseQuality(currentItem);
 			}
 		}
-	}
-	
-	private static void decreaseQuality(int currentItem)
-	{
-		if (items.get(currentItem).getQuality() > 0)
-		{
-			if (!"Sulfuras, Hand of Ragnaros".equals(items.get(currentItem)
-					.getName()))
-			{
-				items.get(currentItem).setQuality(
-						items.get(currentItem).getQuality() - 1);
-			}
-		}
-	}
-	
-	private static void increaseQuality(int currentItem)
-	{
-		if (items.get(currentItem).getQuality() < MAX_QUALITY)
-		{
-			items.get(currentItem).setQuality(
-					items.get(currentItem).getQuality() + 1);
-		}
-	}
-	
-	private static void decreaseSellIn()
-	{
-		for (int currentItem = 0; currentItem < items.size(); currentItem++)
 		
+	}
+	
+	private static void processAgedBrie(Item currentItem)
+	{
+		increaseQuality(currentItem);
+		if (isPassedOut(currentItem))
 		{
-			
-			if (!"Sulfuras, Hand of Ragnaros".equals(items.get(currentItem)
-					.getName()))
-			{
-				items.get(currentItem).setSellIn(
-						items.get(currentItem).getSellIn() - 1);
-			}
+			increaseQuality(currentItem);
 		}
+	}
+	
+	private static boolean isPassedOut(Item currentItem)
+	{
+		return currentItem.getSellIn() < 0;
+	}
+	
+	private static void decreaseQuality(Item currentItem)
+	{
+		if (currentItem.getQuality() > 0)
+		{
+			currentItem.setQuality(currentItem.getQuality() - 1);
+		}
+	}
+	
+	private static void increaseQuality(Item currentItem)
+	{
+		if (currentItem.getQuality() < MAX_QUALITY)
+		{
+			currentItem.setQuality(currentItem.getQuality() + 1);
+		}
+	}
+	
+	private static void decreaseSellIn(Item currentItem)
+	{
+		currentItem.setSellIn(currentItem.getSellIn() - 1);
 	}
 	
 }
