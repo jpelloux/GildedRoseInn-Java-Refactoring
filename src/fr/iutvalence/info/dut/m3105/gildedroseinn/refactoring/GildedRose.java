@@ -85,23 +85,23 @@ public class GildedRose
 	
 	private static void processBackstage(Item currentItem)
 	{
+		increaseQuality(currentItem);
+		
+		if (currentItem.getSellIn() <= 10)
+		{
+			increaseQuality(currentItem);
+		}
+		
+		if (currentItem.getSellIn() <= 5)
+		{
+			increaseQuality(currentItem);
+		}
+				
 		if (isPassedOut(currentItem))
 		{
 			currentItem.setQuality(0);
-		} else
-		{
-			increaseQuality(currentItem);
-			
-			if (currentItem.getSellIn() <= 10)
-			{
-				increaseQuality(currentItem);
-			}
-			
-			if (currentItem.getSellIn() <= 5)
-			{
-				increaseQuality(currentItem);
-			}
-		}
+		} 
+
 		
 	}
 	
