@@ -3,7 +3,7 @@ package fr.iutvalence.info.dut.m3105.gildedroseinn.refactoring;
 public class Item
 {
 	private String name;
-	private int sellIn;
+	private int sellIn;	//TODO comprendre sellIn
 	private int quality;
 
 	public Item(String name, int sellIn, int quality)
@@ -41,5 +41,10 @@ public class Item
 	public void setQuality(int quality)
 	{
 		this.quality = quality;
+	}
+	
+	public String toString()
+	{
+		return this.name + "\nsellIn : " + this.sellIn + "\nquality : " + this.quality + "\n\n";
 	}
 }
